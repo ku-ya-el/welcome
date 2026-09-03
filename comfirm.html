@@ -1,0 +1,937 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta
+  name="viewport"
+  content="width=device-width, initial-scale=1.0">
+
+<base target="_top">
+
+<script src="https://unpkg.com/html5-qrcode"></script>
+
+
+<style>
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  width: 100%;
+  min-height: 100%;
+}
+
+body {
+
+  font-family: Arial, sans-serif;
+  text-align: center;
+
+  background-color: #f4f4f9;
+
+  padding: 8px;
+
+}
+
+
+/* =========================
+   タイトル
+   ========================= */
+
+#title1 {
+  font-size: 32px;
+  line-height: 1.1;
+  color: #333;
+  font-weight: bold;
+}
+
+#title2 {
+  font-size: 32px;
+  line-height: 1.1;
+  color: #333;
+  font-weight: bold;
+}
+
+#title3 {
+  font-size: 24px;
+  line-height: 1.2;
+  color: #333;
+  font-weight: bold;
+}
+
+
+/* =========================
+   ボタン
+   ========================= */
+
+#startButton {
+
+  font-size: 18px;
+
+  padding: 7px 18px;
+
+  margin: 6px;
+
+}
+
+
+/* =========================
+   カメラ
+   ========================= */
+
+#reader {
+
+  margin: 4px auto;
+
+  border: none !important;
+
+}
+
+#reader__dashboard {
+  display: none !important;
+}
+
+#reader video {
+  display: block !important;
+}
+
+
+/* =========================
+   結果
+   ========================= */
+
+#result {
+
+  width: min(96%, 880px);
+
+  margin: 7px auto 0;
+
+  padding: 9px;
+
+  min-height: 58px;
+
+  border-radius: 8px;
+
+  display: flex;
+  flex-direction: column;
+
+  align-items: center;
+  justify-content: center;
+
+}
+
+.status-title {
+
+  font-size: 24px;
+
+  font-weight: bold;
+
+}
+
+.status-time {
+
+  font-size: 18px;
+
+  opacity: 0.85;
+
+}
+
+
+/* =========================
+   色
+   ========================= */
+
+.default {
+
+  background-color: #e9ecef;
+  color: #495057;
+
+}
+
+.success {
+
+  background-color: #d4edda;
+  color: #155724;
+
+  border: 1px solid #c3e6cb;
+
+}
+
+.warning {
+
+  background-color: #fff3cd;
+  color: #856404;
+
+  border: 1px solid #ffeeba;
+
+}
+
+.error {
+
+  background-color: #f8d7da;
+  color: #721c24;
+
+  border: 1px solid #f5c6cb;
+
+}
+
+
+/* =========================
+   スマホ
+   ========================= */
+
+@media (max-width: 699px) {
+
+  #title1,
+  #title2 {
+
+    font-size: 25px;
+
+  }
+
+  #title3 {
+
+    font-size: 20px;
+
+  }
+
+  #startButton {
+
+    font-size: 16px;
+
+  }
+
+  .status-title {
+
+    font-size: 18px;
+
+  }
+
+  .status-time {
+
+    font-size: 15px;
+
+  }
+
+}
+
+
+/* ==========================================
+   タブレット横向き
+   ========================================== */
+
+@media
+  (min-width: 700px)
+  and (orientation: landscape) {
+
+  body {
+
+    padding-top: 8px;
+    padding-bottom: 8px;
+
+  }
+
+
+  #title1,
+  #title2 {
+
+    font-size: 38px;
+
+    line-height: 1.05;
+
+  }
+
+
+  /*
+    坂井大会の上下に
+    少しだけ間隔を追加
+  */
+
+  #title2 {
+
+    margin-top: 8px;
+    margin-bottom: 16px;
+
+  }
+
+
+  #title3 {
+
+    font-size: 30px;
+
+    line-height: 1.05;
+
+  }
+
+
+  #startButton {
+
+    font-size: 20px;
+
+    padding: 7px 20px;
+
+    margin: 6px;
+
+  }
+
+
+  #result {
+
+    width: min(86%, 900px);
+
+    min-height: 64px;
+
+    padding: 9px;
+
+    margin-top: 7px;
+
+  }
+
+
+  .status-title {
+
+    font-size: 26px;
+
+  }
+
+
+  .status-time {
+
+    font-size: 19px;
+
+  }
+
+}
+
+
+/* =========================
+   スマホ横向き
+   ========================= */
+
+@media
+  (max-width: 699px)
+  and (orientation: landscape) {
+
+  #title1,
+  #title2 {
+
+    font-size: 18px;
+
+  }
+
+  #title3 {
+
+    font-size: 15px;
+
+  }
+
+  #startButton {
+
+    font-size: 14px;
+
+    padding: 4px 14px;
+
+    margin: 3px;
+
+  }
+
+  #result {
+
+    min-height: 38px;
+
+    padding: 4px;
+
+  }
+
+  .status-title {
+
+    font-size: 16px;
+
+  }
+
+  .status-time {
+
+    font-size: 13px;
+
+  }
+
+}
+
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<div id="title1">
+福井県小学校家庭科研究大会
+</div>
+
+<div id="title2">
+坂井大会
+</div>
+
+<div id="title3">
+受付システム
+</div>
+
+
+<button
+  id="startButton"
+  onclick="startCamera()">
+
+カメラを開始
+
+</button>
+
+
+<div id="reader"></div>
+
+
+<div
+  id="result"
+  class="default">
+
+  <div class="status-title">
+    QRコードをカメラにかざしてください
+  </div>
+
+  <div
+    class="status-time"
+    id="result-time">
+  </div>
+
+</div>
+
+
+
+<script>
+
+
+let isProcessing = false;
+
+let cameraStarted = false;
+
+let resizeTimer = null;
+
+
+/* =================================
+   端末に応じて
+   カメラ表示サイズを決める
+   ================================= */
+
+function getCameraSize() {
+
+  const width =
+    window.innerWidth;
+
+  const height =
+    window.innerHeight;
+
+  const landscape =
+    width > height;
+
+
+  /*
+    タブレット
+  */
+
+  if (width >= 700) {
+
+
+    if (landscape) {
+
+
+      /*
+        タブレット横向き
+      */
+
+      return Math.min(
+
+        Math.floor(height * 0.74),
+
+        Math.floor(width * 0.62)
+
+      );
+
+    }
+
+
+    else {
+
+
+      /*
+        タブレット縦向き
+      */
+
+      return 280;
+
+    }
+
+  }
+
+
+  /*
+    スマホ横向き
+  */
+
+  if (landscape) {
+
+    return Math.min(
+
+      220,
+
+      Math.floor(height * 0.48)
+
+    );
+
+  }
+
+
+  /*
+    スマホ縦向き
+  */
+
+  return Math.min(
+
+    300,
+
+    Math.floor(width * 0.80)
+
+  );
+
+}
+
+
+
+/* =================================
+   QRコード読み取り処理
+   ================================= */
+
+function onScanSuccess(decodedText) {
+
+
+  if (isProcessing) return;
+
+
+  isProcessing = true;
+
+
+  const resultDiv =
+    document.getElementById("result");
+
+  const timeDiv =
+    document.getElementById("result-time");
+
+
+  resultDiv.className =
+    "default";
+
+
+  resultDiv
+    .querySelector(".status-title")
+    .innerText =
+      "照合中 (ID: "
+      + decodedText
+      + ")...";
+
+
+  timeDiv.innerText = "";
+
+
+
+  const gasUrl =
+    "https://script.google.com/macros/s/AKfycbwN0eqxM_wwgI0OjvDOSRaYQRqlX_Uccw1ZODyy7xJPdvgICwc_F52TmXbofZYBDdiomg/exec";
+
+
+
+  fetch(
+
+    gasUrl
+    + "?id="
+    + encodeURIComponent(decodedText)
+
+  )
+
+
+  .then(
+    response =>
+      response.json()
+  )
+
+
+  .then(response => {
+
+
+    if (response.success) {
+
+
+      if (
+        response.message.includes("重複")
+      ) {
+
+
+        resultDiv.className =
+          "warning";
+
+
+        resultDiv
+          .querySelector(".status-title")
+          .innerText =
+            "【重複】 "
+            + response.name
+            + " 様";
+
+
+        timeDiv.innerText =
+          "受付日時: "
+          + response.time
+          + " (受付済み)";
+
+
+      }
+
+
+      else {
+
+
+        resultDiv.className =
+          "success";
+
+
+        resultDiv
+          .querySelector(".status-title")
+          .innerText =
+            "【完了】 "
+            + response.name
+            + " 様";
+
+
+        timeDiv.innerText =
+          "受付日時: "
+          + response.time;
+
+
+      }
+
+    }
+
+
+    else {
+
+
+      resultDiv.className =
+        "error";
+
+
+      resultDiv
+        .querySelector(".status-title")
+        .innerText =
+          "【エラー】 "
+          + response.message;
+
+
+      timeDiv.innerText = "";
+
+    }
+
+
+
+    setTimeout(() => {
+
+
+      isProcessing = false;
+
+
+      resultDiv.className =
+        "default";
+
+
+      resultDiv
+        .querySelector(".status-title")
+        .innerText =
+          "次のQRコードをカメラにかざしてください";
+
+
+      timeDiv.innerText = "";
+
+
+    }, 3000);
+
+
+  })
+
+
+  .catch(err => {
+
+
+    resultDiv.className =
+      "error";
+
+
+    resultDiv
+      .querySelector(".status-title")
+      .innerText =
+        "通信エラーが発生しました";
+
+
+    timeDiv.innerText =
+      err;
+
+
+    setTimeout(() => {
+
+      isProcessing = false;
+
+    }, 3000);
+
+
+  });
+
+
+}
+
+
+
+/* =================================
+   QRリーダー
+   ================================= */
+
+const html5QrCode =
+  new Html5Qrcode("reader");
+
+
+
+/* =================================
+   カメラ開始
+   ================================= */
+
+async function startCamera() {
+
+
+  if (cameraStarted) {
+    return;
+  }
+
+
+  try {
+
+
+    const size =
+      getCameraSize();
+
+
+    const reader =
+      document.getElementById("reader");
+
+
+    reader.style.width =
+      size + "px";
+
+
+    await html5QrCode.start(
+
+
+      {
+        /*
+          前面カメラ
+        */
+
+        facingMode: "user"
+      },
+
+
+      {
+
+        fps: 10,
+
+        aspectRatio: 1.0,
+
+
+        qrbox: function(
+          viewfinderWidth,
+          viewfinderHeight
+        ) {
+
+
+          let qrSize;
+
+
+          /*
+            タブレット横向き
+          */
+
+          if (
+            window.innerWidth >= 700 &&
+            window.innerWidth > window.innerHeight
+          ) {
+
+
+            qrSize =
+              Math.floor(
+
+                Math.min(
+                  viewfinderWidth,
+                  viewfinderHeight
+                )
+
+                * 0.62
+
+              );
+
+
+          }
+
+
+          /*
+            その他
+          */
+
+          else {
+
+
+            qrSize =
+              Math.floor(
+
+                Math.min(
+                  viewfinderWidth,
+                  viewfinderHeight
+                )
+
+                * 0.68
+
+              );
+
+
+          }
+
+
+          return {
+
+            width: qrSize,
+            height: qrSize
+
+          };
+
+
+        }
+
+
+      },
+
+
+      onScanSuccess
+
+
+    );
+
+
+    cameraStarted = true;
+
+
+  }
+
+
+  catch (err) {
+
+
+    document
+      .getElementById("result")
+      .querySelector(".status-title")
+      .innerText =
+        "カメラを起動できません";
+
+
+    document
+      .getElementById("result-time")
+      .innerText =
+        err;
+
+
+  }
+
+
+}
+
+
+
+/* =================================
+   画面回転への対応
+   ================================= */
+
+window.addEventListener(
+  "resize",
+
+  function() {
+
+
+    clearTimeout(resizeTimer);
+
+
+    resizeTimer =
+      setTimeout(
+
+        async function() {
+
+
+          if (!cameraStarted) {
+            return;
+          }
+
+
+          try {
+
+
+            await html5QrCode.stop();
+
+
+            cameraStarted = false;
+
+
+            html5QrCode.clear();
+
+
+            await startCamera();
+
+
+          }
+
+
+          catch (err) {
+
+
+            console.log(
+              "画面回転時の再設定エラー:",
+              err
+            );
+
+
+          }
+
+
+        },
+
+        400
+
+      );
+
+
+  }
+
+);
+
+
+</script>
+
+
+</body>
+
+</html>
