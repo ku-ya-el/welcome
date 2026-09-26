@@ -96,8 +96,18 @@ body {
   display: none !important;
 }
 
+
+/*
+  前面カメラの映像を
+  鏡のように左右反転して表示する
+*/
+
 #reader video {
+
   display: block !important;
+
+  transform: scaleX(-1);
+
 }
 
 
@@ -246,11 +256,6 @@ body {
 
   }
 
-
-  /*
-    坂井大会の上下に
-    少しだけ間隔を追加
-  */
 
   #title2 {
 
@@ -614,6 +619,11 @@ function onScanSuccess(decodedText) {
             + response.name
             + " 様";
 
+
+        /*
+          GAS側から返された
+          受付時刻を表示
+        */
 
         timeDiv.innerText =
           "受付日時: "
